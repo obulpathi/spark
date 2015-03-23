@@ -32,23 +32,29 @@ def process(master, gradesFileName, placesFileName, outputFileName):
 
     # load grades data
     gradesFile = sc.wholeTextFiles(gradesFileName)
-
     gradesData = gradesFile.flatMap(loadGrades)
-
-    goodGradesData = gradesData.filter(
-        lambda x: x['grade'] != '-')
+    # filter bad data
+    gradesRecords = gradesData.filter(
+        lambda x: x["grade"] != "-")
+    gradesMap = gradesRecords.map(lambda x: (x["name"], x))
 
     # load geo data
     placesFile = sc.wholeTextFiles(placesFileName)
-
     placesData = placesFile.flatMap(loadPlacesData)
+    # filter bad dta
+    placesRecords = placesData.filter(
+        lambda x: x["place"] != "-")
+    placesMap = placesRecords.map(lambda x: (x["name"], x))
 
-    goodPlacesData = placesData.filter(
-        lambda x: x['place'] != '-')
+    # join grades and places info
+    studentsMap = gradesMap.join(placesMap)
 
+    # group students by class
+    groupedStudentsMap = studentsMap.groupedByKey()
+    # write output to file
+    groupedStudentsMap.saveAstextFile(outputFileName)
 
-    fullFilePandaLovers.mapPartitions(
-        writeRecords).saveAsTextFile(outputFile + "fullfile")
+    # stop Spark
     sc.stop()
 
 
