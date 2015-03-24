@@ -34,16 +34,16 @@ def process(master, gradesFileName, placesFileName, outputFileName):
     gradesFile = sc.wholeTextFiles(gradesFileName)
     gradesData = gradesFile.flatMap(loadGrades)
     # filter bad data
-    gradesRecords = gradesData.filter(
-        lambda x: x["grade"] != "-")
+    gradesRecords = gradesData.filter(lambda x: x["grade"] != "-")
+    # create a map
     gradesMap = gradesRecords.map(lambda x: (x["name"], x))
 
     # load geo data
     placesFile = sc.wholeTextFiles(placesFileName)
     placesData = placesFile.flatMap(loadPlacesData)
-    # filter bad dta
-    placesRecords = placesData.filter(
-        lambda x: x["place"] != "-")
+    # filter bad data
+    placesRecords = placesData.filter(lambda x: x["place"] != "-")
+    # create a map
     placesMap = placesRecords.map(lambda x: (x["name"], x))
 
     # join grades and places info
