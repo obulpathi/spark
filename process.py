@@ -51,6 +51,7 @@ def process(master, gradesFileName, placesFileName, outputFileName):
 
     # group students by class
     groupedStudentsMap = studentsMap.groupedByKey()
+
     # write output to file
     groupedStudentsMap.saveAstextFile(outputFileName)
 
