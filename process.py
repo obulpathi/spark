@@ -32,6 +32,7 @@ def process(master, gradesFileName, placesFileName, outputFileName):
 
     # load grades data
     gradesFile = sc.wholeTextFiles(gradesFileName)
+    # read the fields
     gradesData = gradesFile.flatMap(loadGrades)
     # filter bad data
     gradesRecords = gradesData.filter(lambda x: x["grade"] != "-")
@@ -40,6 +41,7 @@ def process(master, gradesFileName, placesFileName, outputFileName):
 
     # load geo data
     placesFile = sc.wholeTextFiles(placesFileName)
+    # read the fields
     placesData = placesFile.flatMap(loadPlacesData)
     # filter bad data
     placesRecords = placesData.filter(lambda x: x["place"] != "-")
